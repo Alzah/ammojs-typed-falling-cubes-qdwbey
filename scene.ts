@@ -12,7 +12,6 @@ import {
 
 import { Simulation } from './simulation';
 import { createShader } from './shader';
-import map from './meshes.json';
 
 export class Scene {
   private numCubes = 1000;
