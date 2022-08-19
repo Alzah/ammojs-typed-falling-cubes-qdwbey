@@ -1,5 +1,7 @@
 import { Mat4 } from '@gglib/math';
 import Ammo from 'ammojs-typed';
+import { meshes } from './mesh';
+var Quaternion = require('quaternion');
 
 export class Simulation {
   public readonly config = new Ammo.btDefaultCollisionConfiguration();
@@ -70,7 +72,40 @@ export class Simulation {
   }
 
   public init() {
-    for (let i = 0; i < this.numBoxes; i++) {
+    var mshs = meshes();
+    var colliders = mshs.SerializedColliders;
+    for (let i = 0; i < colliders.length; i++) {
+      var mesh = colliders[i];
+      const shape = new Ammo.btBoxShape(
+        new Ammo.btVector3(mesh.Scale.x / 2, mesh.Scale.y / 2, mesh.Scale.z / 2)
+      );
+      const transform = new Ammo.btTransform();
+      transform.setIdentity();
+      transform.setOrigin(
+        new Ammo.btVector3(mesh.Position.x, mesh.Position.y, mesh.Position.z)
+      );
+      var quat = BABYLON.Quaternion.FromEulerAngles(
+        mesh.Rotation.x,
+        mesh.Rotation.y,
+        mesh.Rotation.z
+      );
+      transform.setRotation(
+        new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w)
+      );
+
+      var mass = 0;
+      var localInertia = new Ammo.btVector3(0, 0, 0);
+      var myMotionState = new Ammo.btDefaultMotionState(transform);
+      var rbInfo = new Ammo.btRigidBodyConstructionInfo(
+        mass,
+        myMotionState,
+        shape,
+        localInertia
+      );
+      var body = new Ammo.btRigidBody(rbInfo);
+
+      this.world.addRigidBody(body);
+
       var startTransform = new Ammo.btTransform();
       startTransform.setIdentity();
       var mass = 1;

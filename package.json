@@ -6,6 +6,7 @@
     "@gglib/graphics": "^0.6.0",
     "@gglib/math": "^0.6.0",
     "@gglib/utils": "^0.6.0",
-    "ammojs-typed": "^1.0.2"
+    "ammojs-typed": "^1.0.2",
+    "quaternion": "^2.0.0"
   }
 }
